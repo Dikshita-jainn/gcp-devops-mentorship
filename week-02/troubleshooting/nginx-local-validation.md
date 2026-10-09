@@ -69,3 +69,49 @@ The request to Ubuntu's assigned IPv4 address succeeded and returned HTTP 200 OK
 ## Troubleshooting Principle
 
 Check the service, listening port, local connectivity, logs, and network path separately. A successful local request does not guarantee that another machine can reach the service.
+## Check 5: Access Nginx from the Windows Host
+
+### Initial Test
+
+URL:
+http://10.0.2.15
+
+Result:
+The Windows browser could not reach the page.
+
+### Investigation
+
+VirtualBox Adapter 1 was configured to use NAT.
+
+Explanation:
+The guest's NAT IP was not directly reachable from the Windows host through the default NAT configuration.
+
+### Fix Applied
+
+Configured a VirtualBox NAT port-forwarding rule:
+
+- Protocol: TCP
+- Host IP: blank
+- Host port: 8080
+- Guest IP: 10.0.2.15
+- Guest port: 80
+
+### Verification
+
+URL:
+http://127.0.0.1:8080
+
+Result:
+The Nginx Welcome page appeared in the Windows browser.
+
+### Root Cause
+
+The Windows host did not have a direct incoming connection path to Nginx through the default VirtualBox NAT configuration.
+
+### Resolution
+
+Configured port forwarding from Windows host port 8080 to Ubuntu guest port 80.
+
+### Learning
+
+A service can be running and responding locally while remaining inaccessible from another machine. Troubleshooting must check the service, listening port, and network path separately.
