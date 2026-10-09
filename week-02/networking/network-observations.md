@@ -1,0 +1,57 @@
+# Week 02 - Networking Observations
+
+## 1. Environment
+
+- Host OS: Windows 11 Enterprise
+- Guest OS: Ubuntu 26.04.1 LTS
+- VirtualBox Network Adapter 1: NAT
+- Ubuntu network interface: enp0s3
+
+## 2. Identify Network Interfaces and IP Addresses
+
+### Command 1: ip addr
+
+**Purpose:** Displays network interfaces and their assigned IP addresses.
+
+**Observed results:**
+- Loopback interface: `lo`
+- Loopback IPv4 address: `127.0.0.1/8`
+- Loopback IPv6 address: `::1/128`
+- Active network interface: `enp0s3`
+- Guest IPv4 address: `10.0.2.15/24`
+- Guest IPv6 address: `fd17:625c:f037:2:a00:27ff:fe83:795d/64`
+
+**Explanation:** The `lo` interface is used for communication within the same Ubuntu system. The `enp0s3` interface connects the Ubuntu VM to its VirtualBox NAT network.
+
+### Command 2: hostname -I
+
+**Purpose:** Displays IP addresses assigned to the system.
+
+**Observed output:**
+`10.0.2.15 fd17:625c:f037:2:a00:27ff:fe83:795d`
+
+**Explanation:** The output contains the Ubuntu VM's IPv4 and IPv6 addresses.
+
+### Command 3: ip route
+
+**Purpose:** Displays the IPv4 routing table.
+
+**Observed output:**
+```text
+default via 10.0.2.2 dev enp0s3 proto dhcp src 10.0.2.15 metric 100
+10.0.2.0/24 dev enp0s3 proto kernel scope link src 10.0.2.15 metric 100
+
+```
+
+**Explanation:**
+- `10.0.2.2` is the default gateway in this VirtualBox NAT setup.
+- `enp0s3` is the network interface used to send traffic.
+- `10.0.2.15` is the Ubuntu VM's IPv4 address.
+- `10.0.2.0/24` represents the local IPv4 network.
+
+## 3. Key Learning
+
+- `127.0.0.1` refers to the local Ubuntu system when used inside Ubuntu.
+- `10.0.2.15` is the Ubuntu VM's IPv4 address.
+- `10.0.2.2` is the VirtualBox NAT gateway.
+- The default route tells Ubuntu where to send IPv4 traffic when no more specific route matches.
